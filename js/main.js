@@ -1,5 +1,9 @@
 var sigInst, canvas, $GP
 
+var cluster_attr = "Modularity Class"
+
+var outer_node
+
 //Load configuration file
 var config={};
 
@@ -90,15 +94,21 @@ function initSigma(config) {
 
     dataReady = function() {//This is called as soon as data is loaded
 		a.clusters = {};
-
+		a.cluster_colors = {};
 		a.iterNodes(
 			function (b) { //This is where we populate the array used for the group select box
 
 				// note: index may not be consistent for all nodes. Should calculate each time. 
-				 // alert(JSON.stringify(b.attr.attributes[5].val));
-				// alert(b.x);
-				a.clusters[b.color] || (a.clusters[b.color] = []);
+				//  alert(JSON.stringify(b.attr.attributes));
+				//alert(b.x);
+				outer_node = b;
+                /*
+                a.clusters[b.color] || (a.clusters[b.color] = []);
 				a.clusters[b.color].push(b.id);//SAH: push id not label
+                */
+                a.clusters[b.attr.attributes[cluster_attr]] || (a.clusters[b.attr.attributes[cluster_attr]] = []);
+                a.clusters[b.attr.attributes[cluster_attr]].push(b.id);
+                a.cluster_colors[b.attr.attributes[cluster_attr]] = b.color
 			}
 		
 		);
@@ -196,6 +206,7 @@ function setupGUI(config) {
 	if (!config.features.groupSelectorAttribute) {
 		$("#attributeselect").hide();
 	}
+    //console.log($GP.form.find("#attributeselect"));
     $GP.cluster = new Cluster($GP.form.find("#attributeselect"));
     config.GP=$GP;
     initSigma(config);
@@ -277,7 +288,10 @@ function configSigmaElements(config) {
     $GP.bg2 = $(sigInst._core.domElements.bg2);
     var a = [],
         b,x=1;
+        /*
 		for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + b + ';display:inline-block"></div> Group ' + (x++) + ' (' + sigInst.clusters[b].length + ' members)</a></div>');
+        */
+        for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + sigInst.cluster_colors[b] + ';display:inline-block"></div> Group ' + b + ' (' + sigInst.clusters[b].length + ' members)</a></div>');
     //a.sort();
     $GP.cluster.content(a.join(""));
     b = {
@@ -377,6 +391,7 @@ function Search(a) {
                     name: a.label
                 })
             });
+            console.log(a);
             c.length ? (b = !0, nodeActive(c[0].id)) : b = showCluster(a);
             a = ["<b>Search Results: </b>"];
             if (1 < c.length) for (var d = 0, h = c.length; d < h; d++) a.push('<a href="#' + c[d].name + '" onclick="nodeActive(\'' + c[d].id + "')\">" + c[d].name + "</a>");
@@ -589,6 +604,7 @@ function nodeActive(a) {
 }
 
 function showCluster(a) {
+    console.log("showCluster", a)
     var b = sigInst.clusters[a];
     if (b && 0 < b.length) {
         showGroups(!1);
