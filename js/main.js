@@ -206,7 +206,6 @@ function setupGUI(config) {
 	if (!config.features.groupSelectorAttribute) {
 		$("#attributeselect").hide();
 	}
-    //console.log($GP.form.find("#attributeselect"));
     $GP.cluster = new Cluster($GP.form.find("#attributeselect"));
     config.GP=$GP;
     initSigma(config);
@@ -291,7 +290,7 @@ function configSigmaElements(config) {
         /*
 		for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + b + ';display:inline-block"></div> Group ' + (x++) + ' (' + sigInst.clusters[b].length + ' members)</a></div>');
         */
-        for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + sigInst.cluster_colors[b] + ';display:inline-block"></div> Group ' + b + ' (' + sigInst.clusters[b].length + ' members)</a></div>');
+        for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + sigInst.cluster_colors[b] + ';display:inline-block"></div> ' + b + ' (' + sigInst.clusters[b].length + ')</a></div>');
     //a.sort();
     $GP.cluster.content(a.join(""));
     b = {
@@ -391,7 +390,6 @@ function Search(a) {
                     name: a.label
                 })
             });
-            console.log(a);
             c.length ? (b = !0, nodeActive(c[0].id)) : b = showCluster(a);
             a = ["<b>Search Results: </b>"];
             if (1 < c.length) for (var d = 0, h = c.length; d < h; d++) a.push('<a href="#' + c[d].name + '" onclick="nodeActive(\'' + c[d].id + "')\">" + c[d].name + "</a>");
@@ -604,7 +602,6 @@ function nodeActive(a) {
 }
 
 function showCluster(a) {
-    console.log("showCluster", a)
     var b = sigInst.clusters[a];
     if (b && 0 < b.length) {
         showGroups(!1);
