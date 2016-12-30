@@ -575,3 +575,18 @@ cursor: pointer;
 display: none;
 }
 
+
+
+#maintitle {
+/*
+
+height: 72px;
+*/
+margin-bottom:20px;
+height:0px;
+}
+
+#maintitle h1 {
+/*display: none;*/
+display:block;
+}
