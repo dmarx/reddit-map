@@ -81,12 +81,16 @@ with open(config_fpath, 'wb') as outfile:
     
 ##############
 
-## Dump the legend
+## Dump the legend and OII branding
 with open(html_path, 'r') as f:
     soup = BeautifulSoup(f.read())
 
-legend = soup.find('div', {'id':'legend'})
-legend.extract()
+element = soup.find('div', {'id':'legend'})
+element.extract()
+    
+element = soup.find('div', {'id':'developercontainer'})
+element.extract()
+
     
 ## Improve title
 #soup.title.replace_with('<title>Map of Reddit - David Marx</title>')
