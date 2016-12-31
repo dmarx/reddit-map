@@ -577,7 +577,11 @@ function nodeActive(a) {
             var d = f.attributes[attr],
                 h = "";
 			if (attr!=image_attribute) {
-                h = '<span><strong>' + attr + ':</strong> ' + d + '</span><br/>'
+                if (attr=='Modularity Class') {
+                    h = '<span><strong>' + attr + ':</strong> <a href="#' + d + '" onclick="showCluster(\''+d+'\')">'+d+'</a></span><br/>'
+                } else {
+                    h = '<span><strong>' + attr + ':</strong> ' + d + '</span><br/>'
+                }
 			}
             //temp_array.push(f.attributes[g].attr);
             e.push(h)
