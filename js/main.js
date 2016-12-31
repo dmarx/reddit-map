@@ -384,12 +384,25 @@ function Search(a) {
         this.results.empty();
         if (2 >= a.length) this.results.html("<i>You must search for a name with a minimum of 3 letters.</i>");
         else {
+            var exactly_matched = false;
+            var exact_match_node;
+            var query_term = this.lastSearch;
             sigInst.iterNodes(function (a) {
-                g.test(a.label.toLowerCase()) && c.push({
+                if(a.label.toLowerCase() == query_term){
+                    exactly_matched = true;
+                    exact_match_node = {id: a.id, name:a.label}
+                } else {
+                    g.test(a.label.toLowerCase()) && c.push({
                     id: a.id,
                     name: a.label
                 })
+                }
             });
+            if(exactly_matched){
+                var c2 = [exact_match_node];
+                for (var d = 0, h = c.length; d < h; d++) c2.push(c[d]);
+                c = c2;
+            }
             c.length ? (b = !0, nodeActive(c[0].id)) : b = showCluster(a);
             a = ["<b>Search Results: </b>"];
             if (1 < c.length) for (var d = 0, h = c.length; d < h; d++) a.push('<a href="#' + c[d].name + '" onclick="nodeActive(\'' + c[d].id + "')\">" + c[d].name + "</a>");
