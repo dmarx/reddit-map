@@ -1,5 +1,6 @@
 from collections import defaultdict
 from bs4 import BeautifulSoup
+from operator import itemgetter
 
 try:
     import ujson as json
@@ -35,43 +36,25 @@ config['sigma']['drawingProperties']['labelThreshold'] = 6
 pass
 
 #Relabel modularity classes according to their k most active subreddits
-# >> Class relabeling works in the node details screen, but class labels don't appear in the group selector. Just numbers.
-#    We're going to need to modify line 280 of main.js
-
-def two_list():
-    return [[],[]]
-
-community_prototypes = defaultdict(two_list)
 
 k=2
 with open(data_fpath, 'r') as f:
     data = json.load(f)
 
+communities = defaultdict(list)
 for node in data['nodes']:
-    class_id = node['attributes']['Modularity Class']
-    count = node['attributes']['count'] # I should rename this to 'active users' or something like that
+    rec = (node['label'], int(node['attributes']['count']))
+    communities[node['attributes']['Modularity Class']].append(rec)
     
-    class_list = community_prototypes[class_id]
-    #for i in range(k):
-    rec = [node['label'], count]
-    if any(item == [] for item in class_list):
-        for i in range(k):
-            if not class_list[i]:
-                class_list[i] = rec
-                break
-    else:
-        for i in range(k):
-            if class_list[i][1] < count:
-                class_list[i] = rec
-                break
+for c_id in communities:
+    comm = communities[c_id]
+    communities[c_id] = sorted(comm, key=itemgetter(1), reverse=True)[:k]
 
-# Less descriptive than I'd've liked. I should probably use subscriber counts instead
-# of active user counts. Anyway...
 
 # Relabel classes
 for node in data['nodes']:
     class_id = node['attributes']['Modularity Class']
-    node['attributes']['Modularity Class'] = ' | '.join(zip(*community_prototypes[class_id])[0])
+    node['attributes']['Modularity Class'] = ' | '.join(zip(*communities[class_id])[0])
 
 with open(data_fpath, 'wb') as outfile:
     json.dump(data, outfile)
