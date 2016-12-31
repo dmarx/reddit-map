@@ -153,6 +153,19 @@ height:0px;
 /*display: none;*/
 display:block;
 }
+
+#mainpanel .col {
+    width:180px;
+}
+
+#search 
+input[name=search] {
+    width:140px;
+}
+
+#attributepane {
+    width:180px;
+}
 """
 
 with open(css_path, 'wb') as f:
