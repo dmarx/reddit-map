@@ -1,1 +1,53 @@
-{"informationPanel":{"imageAttribute":false,"groupByEdgeDirection":false},"features":{"hoverBehavior":"dim","search":true,"groupSelectorAttribute":"Modularity Class"},"text":{"more":"A user is active in a subreddit if they commented in at least 3 separate posts in a given month.<br><br>An edge between two subreddits denotes that during at least one month between January 2015 and November 2016, the linked subreddits had at least 10 active users, at least 2 users in common, and at least 10% active users in common with respect to the smaller of the subreddits, the \"mutual user ratio.\"<br><br>Edges are weighted according to the highest observed mutual user ratio between those two subreddits across all months.<br><br>A subreddit only appears in the map if it satisfies the following additional conditions: (1) it had an average of at least 1 active user from September-Novemebr 2016, and (2) it has at least one edge connected to it. Subreddits that were not recently active or were a relationship could not be inferred are excluded. Notable examples of ignored but active subreddits include \/r\/MapleStory, \/r\/MSLGame and \/r\/indonesia.<br><br>Color denotes membership to a \"community\" of subreddits determined algorithmically (gephi's modularity minimzation algorithm).<br><br>Layout was calculated using gephi's Force Atlas 2 algorithm, with LinLog mode and Prevent Overlap options.<br><br>Edges were inferred from the public comments dataset collected by \/u\/stuck_in_the_matrix and made available on Google Bigquery by Felipe Hoffa (\/u\/fhoffa).","intro":"","title":"by David Marx"},"sigma":{"drawingProperties":{"hoverFontStyle":"bold","activeFontStyle":"bold","defaultLabelSize":14,"defaultLabelHoverColor":"#fff","labelThreshold":6,"defaultHoverLabelBGColor":"#002147","defaultLabelBGColor":"#ddd","fontStyle":"bold","defaultLabelColor":"#000","defaultEdgeType":"curve"},"mouseProperties":{"minRatio":0.75,"maxRatio":80},"graphProperties":{"minNodeSize":0.07,"maxEdgeSize":0.3,"maxNodeSize":4,"minEdgeSize":0.1}},"version":"1.0","type":"network","logo":{"text":"Map of Reddit","link":"","file":""},"data":"data.json","legend":{"nodeLabel":"","edgeLabel":"","colorLabel":""}}
+{
+	"informationPanel": {
+		"imageAttribute": false,
+		"groupByEdgeDirection": false
+	},
+	"features": {
+		"hoverBehavior": "dim",
+		"search": true,
+		"groupSelectorAttribute": "Modularity Class"
+	},
+	"text": {
+		"more": "A user is active in a subreddit if they commented in at least 3 separate posts in a given month.<br><br>An edge between two subreddits denotes that during at least one month between January 2015 and November 2016, the linked subreddits had at least 10 active users, at least 2 users in common, and at least 10% active users in common with respect to the smaller of the subreddits, the \"mutual user ratio.\"<br><br>Edges are weighted according to the highest observed mutual user ratio between those two subreddits across all months.<br><br>A subreddit only appears in the map if it satisfies the following additional conditions: (1) it had an average of at least 1 active user from September-Novemebr 2016, and (2) it has at least one edge connected to it. Subreddits that were not recently active or were a relationship could not be inferred are excluded. Notable examples of ignored but active subreddits include \/r\/MapleStory, \/r\/MSLGame and \/r\/indonesia.<br><br>Color denotes membership to a \"community\" of subreddits determined algorithmically (gephi's modularity minimzation algorithm).<br><br>Layout was calculated using gephi's Force Atlas 2 algorithm, with LinLog mode and Prevent Overlap options.<br><br>Edges were inferred from the public comments dataset collected by \/u\/stuck_in_the_matrix and made available on Google Bigquery by Felipe Hoffa (\/u\/fhoffa).",
+		"intro": "",
+		"title": "by David Marx"
+	},
+	"sigma": {
+		"drawingProperties": {
+			"hoverFontStyle": "bold",
+			"activeFontStyle": "bold",
+			"defaultLabelSize": 14,
+			"defaultLabelHoverColor": "#fff",
+			"labelThreshold": 4,
+			"defaultHoverLabelBGColor": "#002147",
+			"defaultLabelBGColor": "#ddd",
+			"fontStyle": "bold",
+			"defaultLabelColor": "#000",
+			"defaultEdgeType": "curve"
+		},
+		"mouseProperties": {
+			"minRatio": 0.75,
+			"maxRatio": 80
+		},
+		"graphProperties": {
+			"minNodeSize": 0.07,
+			"maxEdgeSize": 0.3,
+			"maxNodeSize": 4,
+			"minEdgeSize": 0.1
+		}
+	},
+	"version": "1.0",
+	"type": "network",
+	"logo": {
+		"text": "Map of Reddit",
+		"link": "",
+		"file": ""
+	},
+	"data": "data.json",
+	"legend": {
+		"nodeLabel": "",
+		"edgeLabel": "",
+		"colorLabel": ""
+	}
+}
