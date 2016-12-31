@@ -1,6 +1,10 @@
 from collections import defaultdict
 from bs4 import BeautifulSoup
 from operator import itemgetter
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 try:
     import ujson as json
@@ -35,7 +39,9 @@ config['sigma']['drawingProperties']['labelThreshold'] = 4
 # Rename group selector from "Modularity Class" to something cleaner
 pass
 
-#Relabel modularity classes according to their k most active subreddits
+###################
+# Relabel classes #
+###################
 
 k=2
 with open(data_fpath, 'r') as f:
@@ -50,19 +56,58 @@ for c_id in communities:
     comm = communities[c_id]
     communities[c_id] = sorted(comm, key=itemgetter(1), reverse=True)[:k]
 
-
-# Relabel classes
 for node in data['nodes']:
     class_id = node['attributes']['Modularity Class']
     node['attributes']['Modularity Class'] = ' | '.join(zip(*communities[class_id])[0])
 
+###################
+# Recolor classes #
+###################
+
+# Build a circular color palette in HSL space, reorganize it
+# by selecting colors along a stride, and apply colors to communities in
+# descending rank order
+
+stride = 5
+strided_wheel = []
+wheel_palette = sns.color_palette("hls", len(communities))
+i = 0
+while True:
+    if not wheel_palette:
+        break
+    if i > len(wheel_palette)-1:
+        i -= len(wheel_palette)
+        continue
+    print i, len(wheel_palette)
+    strided_wheel.append(wheel_palette.pop(i))
+    i+=stride
+
+community_counts = [(k, v[0][1]) for k,v in communities.iteritems()]
+community_counts = sorted(community_counts, key=itemgetter(1), reverse=True)
+
+color_map = {}
+for i, comm in enumerate(community_counts):
+    rgb_vals = np.array(strided_wheel[i])*255
+    rgb_str = ','.join(rgb_vals.astype(int).astype(str))
+    color_map[comm[0]] = u'rgb(' + rgb_str + ')'
+    
+node_colors = {}
+for node in data['nodes']:
+    node['color'] = color_map[node['attributes']['Modularity Class']]
+    node_colors[node['id']] = node['color']
+    
+for edge in data['edges']:
+    edge['color'] = node_colors[edge['source']]
+    
 with open(data_fpath, 'wb') as outfile:
     json.dump(data, outfile)
     
 with open(config_fpath, 'wb') as outfile:
     json.dump(config, outfile)
     
-##############
+#######################
+# Markup improvements #
+#######################
 
 ## Dump the legend and OII branding
 with open(html_path, 'r') as f:
@@ -84,7 +129,6 @@ soup.title.replace_with(new_title)
     
 with open(html_path, 'wb') as f:
     f.write(soup.__repr__()) # there's probably a better method I can use for this
-    
     
 ## Modifications to CSS
 
@@ -113,3 +157,7 @@ display:block;
 
 with open(css_path, 'wb') as f:
     f.write(css)
+    
+
+with open(data_fpath, 'wb') as outfile:
+    json.dump(data, outfile)
