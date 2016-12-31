@@ -16,6 +16,7 @@ css_path =  r'C:\Users\davidmarx\Documents\Projects\Toy Projects\RedditGraphEvol
 html_path = r'C:\Users\davidmarx\Documents\Projects\Toy Projects\RedditGraphEvolution\reddit_map_active_subs\network\index.html'  
 config_fpath = r'C:\Users\davidmarx\Documents\Projects\Toy Projects\RedditGraphEvolution\reddit_map_active_subs\network\config.json'
 data_fpath   = r'C:\Users\davidmarx\Documents\Projects\Toy Projects\RedditGraphEvolution\reddit_map_active_subs\network\data.json'
+subr_details_fpath = r'C:\Users\davidmarx\Documents\Projects\Toy Projects\RedditGraphEvolution\reddit_map_active_subs\active_subreddit_details.json'
 
 #######################
 # fix the config file #
@@ -23,6 +24,12 @@ data_fpath   = r'C:\Users\davidmarx\Documents\Projects\Toy Projects\RedditGraphE
 
 with open(config_fpath, 'r') as f:
     config = json.load(f)
+
+with open(data_fpath, 'r') as f:
+    data = json.load(f)
+    
+with open(subr_details_fpath, 'r') as f:
+    subreddit_details = json.load(f)
     
 # Replace newline characters with HTML breaks
 for k,v in config['text'].iteritems():
@@ -39,13 +46,11 @@ config['sigma']['drawingProperties']['labelThreshold'] = 4
 # Rename group selector from "Modularity Class" to something cleaner
 pass
 
-###################
-# Relabel classes #
-###################
+###################################################
+# Relabel classes and add additional subr details #
+###################################################
 
 k=2
-with open(data_fpath, 'r') as f:
-    data = json.load(f)
 
 communities = defaultdict(list)
 for node in data['nodes']:
@@ -59,6 +64,10 @@ for c_id in communities:
 for node in data['nodes']:
     class_id = node['attributes']['Modularity Class']
     node['attributes']['Modularity Class'] = ' | '.join(zip(*communities[class_id])[0])
+    # Set new attributes
+    if node['label'] in subreddit_details:
+        node['attributes']['Subscribers'] = subreddit_details[node['label']]['subscribers']
+        node['attributes']['Description'] = subreddit_details[node['label']]['title']
 
 ###################
 # Recolor classes #
