@@ -604,6 +604,8 @@ function nodeActive(a) {
 	$GP.info_donnees.show();
     sigInst.active = a;
     window.location.hash = b.label;
+    // focus //
+    sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[ b.id ]);
 }
 
 function showCluster(a) {
