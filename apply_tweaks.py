@@ -30,7 +30,7 @@ config['sigma']['graphProperties']['maxNodeSize'] = 4
 config['sigma']['graphProperties']['minEdgeSize'] = 0.1
 config['sigma']['graphProperties']['maxEdgeSize'] = 0.3
 config['sigma']['mouseProperties']['maxRatio'] = 80
-config['sigma']['drawingProperties']['labelThreshold'] = 6
+config['sigma']['drawingProperties']['labelThreshold'] = 4
 
 # Rename group selector from "Modularity Class" to something cleaner
 pass
