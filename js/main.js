@@ -116,15 +116,19 @@ function initSigma(config) {
 		a.bind("upnodes", function (a) {
 		    nodeActive(a.content[0])
 		});
-
+        // suppress edges in initial full graph //
+        a.iterEdges(function(e){
+            e.hidden = !0 
+        });
 		a.draw();
 		configSigmaElements(config);
 	}
 
-    if (data.indexOf("gexf")>0 || data.indexOf("xml")>0)
+    if (data.indexOf("gexf")>0 || data.indexOf("xml")>0) {
         a.parseGexf(data,dataReady);
-    else
-	    a.parseJson(data,dataReady);
+    } else {
+        a.parseJson(data,dataReady);
+        }
     gexf = sigmaInst = null;
 }
 
@@ -277,6 +281,7 @@ function configSigmaElements(config) {
 		}).bind('outnodes',function(){
 		sigInst.iterEdges(function(e){
 		  	e.hidden = 0;
+            //e.hidden = !0 ///////////dmarx
 		}).iterNodes(function(n){
 		  	n.hidden = 0;
 		}).draw(2,2,2);
@@ -451,7 +456,8 @@ function showGroups(a) {
 function nodeNormal() {
     !0 != $GP.calculating && !1 != sigInst.detail && (showGroups(!1), $GP.calculating = !0, sigInst.detail = !0, $GP.info.delay(400).animate({width:'hide'},350),$GP.cluster.hide(), sigInst.iterEdges(function (a) {
         a.attr.color = !1;
-        a.hidden = !1
+        //a.hidden = !1
+        a.hidden = !0
     }), sigInst.iterNodes(function (a) {
         a.hidden = !1;
         a.attr.color = !1;
