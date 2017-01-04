@@ -11,7 +11,7 @@
 	"text": {
 		"more": "Subreddits that had \"active\" users in common between 2015-2016 are linked by a directed edge whose weight is proportional to the fraction of users from one subreddit that were also active in the other. Only subreddits with recent activity and that exhibited a minimum threshold of activity were included in the graph.<br><br>Webapp is powered by the sigma.js gephi export tool provided by the Oxford Internet Institute, with some bug fixes and tweaks via Randal Olson and some additional customizations by me. Inference was performed on the reddit public comments dataset collected and maintained by /u/stuck_in_the_matrix and published to Google Bigquery by Felipe Hoffa.<br><br>Read the accompanying <a href=\"http://dmarx.github.io/map-of-reddit-by-active-users/\">blog post</a> for more details.",
 		"intro": "",
-		"title": "by David Marx"
+		"title": "<br>by <a target=\"_blank\" href=\"http://dmarx.github.io/about/\">David Marx<a>"
 	},
 	"sigma": {
 		"drawingProperties": {

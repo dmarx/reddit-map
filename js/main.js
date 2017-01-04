@@ -673,6 +673,7 @@ function nodeActive(a) {
   		if (config.informationPanel.imageAttribute) {
   			image_attribute=config.informationPanel.imageAttribute;
   		}
+        /*
         var e = [];
         temp_array = [];
         g = 0;
@@ -695,6 +696,7 @@ function nodeActive(a) {
                 e.push(h);
             }
         }
+        */
 		// pull info about the activated subreddit from reddit
 		var SRimage = null;
 		var SRdesc = "";
@@ -732,11 +734,22 @@ function nodeActive(a) {
             
 			if (image_attribute) {
 				//image_index = jQuery.inArray(image_attribute, temp_array);
-				$GP.info_name.html("<div><img src=" + f.attributes[image_attribute] + " style=\"vertical-align:middle\" /> <span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div><br>Subscribers: " + SRsubscr );
+				$GP.info_name.html("<div><img src=" + f.attributes[image_attribute] + " style=\"vertical-align:middle\" /> <span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div>");
 			} else {
-				$GP.info_name.html("<div><span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()"><a target="_blank" title="Go to /r/' + b.label + '" href="http://reddit.com/r/' + b.label + '/">' + b.label + ' <i class="icon-external-link"></i></a><br /><br />' + short_descr + '</span></div><br>Subscribers: ' + SRsubscr);
+				$GP.info_name.html("<div><span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + short_descr + '</span></div>');
+                $('a#subr-link').text(b.label);
+                $('a#subr-link').attr('href', 'http://reddit.com/r/' + b.label + '/');
+                $('a#subr-link').attr('onmouseover', "sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])');
 			}
 			// Image field for attribute pane
+            var e = [];
+            var d = f.attributes['Modularity Class'];
+            var h = '<span><strong>Community:</strong> <a href="#' + d + '" onclick="showCluster(\''+d+'\')">'+d+'</a></span><br/>';
+            e.push(h);
+            h = '<span><strong>Subscribers:</strong> ' + SRsubscr + '</span><br/>';
+            e.push(h);
+            h = '<span><strong>Est. Active Users:</strong> ' + f.attributes['count'] + '</span><br/>';
+            e.push(h);
 			$GP.info_data.html(e.join("<br/>"));
 			});
     }
