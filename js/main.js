@@ -1,4 +1,5 @@
-var sigInst, canvas, $GP
+var sigInst, canvas, $GP;
+var cluster_attr = "Modularity Class";
 
 //Load configuration file
 var config={};
@@ -107,15 +108,20 @@ function initSigma(config) {
 
     dataReady = function() {//This is called as soon as data is loaded
 		a.clusters = {};
-
+        a.cluster_colors = {};
 		a.iterNodes(
 			function (b) { //This is where we populate the array used for the group select box
 
 				// note: index may not be consistent for all nodes. Should calculate each time.
 				 // alert(JSON.stringify(b.attr.attributes[5].val));
 				// alert(b.x);
+                /*
 				a.clusters[b.color] || (a.clusters[b.color] = []);
 				a.clusters[b.color].push(b.id);//SAH: push id not label
+                */
+                a.clusters[b.attr.attributes[cluster_attr]] || (a.clusters[b.attr.attributes[cluster_attr]] = []);
+                a.clusters[b.attr.attributes[cluster_attr]].push(b.id);
+                a.cluster_colors[b.attr.attributes[cluster_attr]] = b.color
 			}
 
 		);
@@ -339,7 +345,10 @@ function configSigmaElements(config) {
     $GP.bg2 = $(sigInst._core.domElements.bg2);
     var a = [],
         b,x=1;
+        /*
 		for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + b + ';display:inline-block"></div> Group ' + (x++) + ' (' + sigInst.clusters[b].length + ' members)</a></div>');
+        */
+        for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + sigInst.cluster_colors[b] + ';display:inline-block"></div> ' + b + ' (' + sigInst.clusters[b].length + ')</a></div>');
     //a.sort();
     $GP.cluster.content(a.join(""));
     b = {
@@ -664,22 +673,27 @@ function nodeActive(a) {
   		if (config.informationPanel.imageAttribute) {
   			image_attribute=config.informationPanel.imageAttribute;
   		}
-        e = [];
+        var e = [];
         temp_array = [];
         g = 0;
-        var attrsToSkip = ['Degree', 'Modularity Class', 'Weighted Degree'];
+        //var attrsToSkip = ['Degree', 'Modularity Class', 'Weighted Degree'];
+        var attrsToSkip = ['Degree', 'Weighted Degree', 'Description', 'Subscribers', 'In-Degree', 'Out-Degree'];
         for (var attr in f.attributes) {
             if (attrsToSkip.indexOf(attr) == -1) {
                 var d = f.attributes[attr],
                     h = "";
                 if (attr!=image_attribute) {
-                    h = '<span><strong>' + attr + ':</strong> ' + d + '</span><br/>'
+                    if (attr=='Modularity Class') {
+                        h = '<span><strong>Community:</strong> <a href="#' + d + '" onclick="showCluster(\''+d+'\')">'+d+'</a></span><br/>';
+                    } else {
+                        h = '<span><strong>' + attr + ':</strong> ' + d + '</span><br/>';
+                    }
                 }
                 //temp_array.push(f.attributes[g].attr);
+                //console.log(h);
                 e.push(h);
             }
         }
-
 		// pull info about the activated subreddit from reddit
 		var SRimage = null;
 		var SRdesc = "";
@@ -689,6 +703,8 @@ function nodeActive(a) {
 			{
 				SRimage = data.data.header_img;
 				SRdesc = data.data.public_description;
+                SRtitle = data.data.title;
+                SRsubscr = data.data.subscribers;
 			}
         )
         .success(function() { ; })
@@ -700,12 +716,24 @@ function nodeActive(a) {
 			$('#subreddit-logo').attr('src', SRimage);
 			$('#subreddit-logo').attr('alt', b.label);
 			$('#subreddit-logo').attr('title', b.label);
-
+            
+            //var short_descr = SRtitle.toLowerCase() != b.label.toLowerCase() ? SRtitle : SRdesc.slice(0,150);
+            //var short_descr = SRdesc.length < 150 ? SRdesc : SRtitle.toLowerCase() != b.label.toLowerCase() : SRtitle : SRdesc.slice(0,150) + "...";
+            var short_descr = ""
+            if (SRdesc.length < 150) {
+                short_descr = SRdesc;
+            } else if (SRtitle.toLowerCase() != b.label.toLowerCase()) {
+                short_descr = SRtitle;
+            } else {
+                short_desc = SRdesc.slice(0,150) + "...";
+            };
+            
+            
 			if (image_attribute) {
 				//image_index = jQuery.inArray(image_attribute, temp_array);
-				$GP.info_name.html("<div><img src=" + f.attributes[image_attribute] + " style=\"vertical-align:middle\" /> <span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div>");
+				$GP.info_name.html("<div><img src=" + f.attributes[image_attribute] + " style=\"vertical-align:middle\" /> <span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()">' + b.label + "</span></div><br>Subscribers: " + SRsubscr );
 			} else {
-				$GP.info_name.html("<div><span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()"><a target="_blank" title="Go to /r/' + b.label + '" href="http://reddit.com/r/' + b.label + '/">' + b.label + ' <i class="icon-external-link"></i></a><br /><br />' + SRdesc + '</span></div>');
+				$GP.info_name.html("<div><span onmouseover=\"sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex['" + b.id + '\'])" onmouseout="sigInst.refresh()"><a target="_blank" title="Go to /r/' + b.label + '" href="http://reddit.com/r/' + b.label + '/">' + b.label + ' <i class="icon-external-link"></i></a><br /><br />' + short_descr + '</span></div><br>Subscribers: ' + SRsubscr);
 			}
 			// Image field for attribute pane
 			$GP.info_data.html(e.join("<br/>"));
@@ -720,6 +748,8 @@ function nodeActive(a) {
 	$GP.info_donnees.show({complete: hideLoading});
     sigInst.active = a;
     window.location.hash = b.label;
+     // focus //
+    sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[ b.id ]);
 }
 
 function showCluster(a) {
