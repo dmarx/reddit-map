@@ -242,7 +242,7 @@ function configSigmaElements(config) {
     // Node hover behaviour
     if (config.features.hoverBehavior == "dim") {
 
-		var greyColor = '#555';
+		var greyColor = '#ccc';
 		sigInst.bind('overnodes',function(event){
 		var nodes = event.content;
 		var neighbors = {};
@@ -542,7 +542,7 @@ function nodeActive(a) {
     sigInst.position(0, 0, 1).draw();  // Hack to get correct coords
     var b = sigInst._core.graph.nodesIndex[a];
     // Zoom in on active node location
-    sigInst.goTo(b.displayX, b.displayY, config.sigma.mouseProperties.maxRatio / 2);
+    sigInst.goTo(b.displayX, b.displayY, config.sigma.mouseProperties.maxRatio / 4);
 
     showGroups(!1);
 	var outgoing={},incoming={},mutual={}, _neighbours = {};//SAH
@@ -686,6 +686,7 @@ function nodeActive(a) {
                     if (attr=='Modularity Class') {
                         h = '<span><strong>Community:</strong> <a href="#' + d + '" onclick="showCluster(\''+d+'\')">'+d+'</a></span><br/>';
                     } else {
+                        attr = attr == 'count' ? 'Est. Active Users' : attr;
                         h = '<span><strong>' + attr + ':</strong> ' + d + '</span><br/>';
                     }
                 }
