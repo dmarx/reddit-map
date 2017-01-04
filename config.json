@@ -32,9 +32,9 @@
 		},
 		"graphProperties": {
 			"minNodeSize": 0.07,
-			"maxEdgeSize": 0.3,
+			"maxEdgeSize": 0.6,
 			"maxNodeSize": 4,
-			"minEdgeSize": 0.1
+			"minEdgeSize": 0.3
 		}
 	},
 	"version": "1.0",
